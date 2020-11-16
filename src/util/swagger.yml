@@ -1,0 +1,182 @@
+tags:
+  - name: Auth
+    description: 사용자 로그인,등록
+  - name: School
+    description: 학교 생성, 목록
+  - name: News
+    description : 뉴스 , 등록 수정, 삭제
+  - name: Subscribe
+    description : 학생 뉴스 목록, 학생 구독 학교 목록, 학교 구독, 학교 구독취소
+path:
+/auth/login:
+  post:
+    summary: 로그인 정보 토큰 가져오기
+    tags: [Auth]
+    parameters:
+      - in: query
+        name: id
+        type: string
+        description:
+         사용자 아이디 전달
+      - in: query
+        name: name
+        type: string
+        description: 사용자 이름 전달
+      - in : query
+        name: passwrod
+        type: string
+        description: 사용자 비밀번호 전달
+/auth/signup:
+  post:
+    summary: 로그인 정보 토큰 가져오기
+    tags: [Auth]
+    parameters:
+      - in: query
+        name: id
+        type: string
+        description: 사용자 아이디 전달
+      - in: query
+        name: name
+        type: string
+        description: 사용자 이름 전달
+      - in : query
+        name: passwrod
+        type: string
+        description: 사용자 비밀번호 전달
+/school:
+  post:
+    summary: 학교 생성
+    tags: [School]
+    parameters:
+      - in: query
+        name: name
+        type: string
+        description:
+          학교 이름
+      - in: query
+        name: area
+        type: string
+        description: 학교 지역
+  get:
+    summary: 학교목록 출력
+    tags: [School]
+    parameters:
+/school/{schoolId}/news:
+  post:
+    summary: 뉴스 생성
+    tags: [News]
+    parameters:
+      - in: query
+        name: sj
+        type: string
+        description: 뉴스 제목
+      - in: query
+        name: cn
+        type: string
+        description: 뉴스 내용
+  put:
+    summary: 뉴스 수정
+    tags: [News]
+    parameters:
+      - in: query
+        name: sj
+        type: string
+        description: 뉴스 수정 제목
+      - in: query
+        name: cn
+        type: string
+        description: 뉴스 수정 내용
+      - in: query
+        name: _id
+        type: string
+        description: 뉴스 _id
+  delete:
+    summary: 뉴스 삭제
+    tags: [News]
+    parameters:
+      - in: query
+        name: _id
+        type: string
+        description: 뉴스 _id
+/subscribe:
+  get:
+    summary: 구독중인 학교 목록 출력
+    tags: [Subscribe]
+/subscribe/news:
+  get:
+    summary: 사용자가 구독한 뉴스 목록 출력
+    tags: [Subscribe]
+/subscribe/{schoolId}:
+  put:
+    summary: schoolId 학교 구독
+    tags: [Subscribe]
+/unsubscribe/{schoolId}:
+  put:
+    summary: schoolId 학교 구독취소
+    tags: [Subscribe]
+definitions:
+  User:
+    required:
+      - id
+      - username
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+        enum: [admin, student]
+        default: student
+      news:
+        type: array
+        items:
+        $ref: '#/definitions/News'
+      schools:
+        type: array
+        items:
+        $ref: '#/definitions/School'
+      create_dt:
+        type: string
+        format: date
+  School:
+    type: object
+    required:
+      - id
+      - name
+      - area
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      area:
+        type: string
+      subscribe_useres:
+        type: array
+        items:
+        $ref: '#/definitions/User'
+  News:
+    type: object
+    required:
+      - sj
+      - cn
+    properties:
+      sj:
+        type: string
+      cn:
+        type: string
+      create_dt:
+        type: string
+        format: Date
+      update_dt:
+        type: string
+        format: Date
+      school:
+        type: array
+        items:
+        $ref: '#/definitions/School'

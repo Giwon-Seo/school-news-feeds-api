@@ -1,0 +1,5 @@
+/src/app.ts
+/node_modules/**/*
+/.idea/**
+/dist/
+/node_modules/
